@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.*
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.RequiresApi
 import android.widget.*
 import com.ekodemy.eko_jitsi.EkoJitsiPlugin.Companion.EKO_JITSI_CLOSE
 import com.ekodemy.eko_jitsi.EkoJitsiPlugin.Companion.EKO_JITSI_TAG
@@ -68,23 +69,24 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
     var ekoLayout: LinearLayout? = null;
 
 
-    override fun onPictureInPictureModeChanged(
-        isInPictureInPictureMode: Boolean,
-        newConfig: Configuration?
-    ) {
-        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
-        if (isInPictureInPictureMode) {
-            EkoJitsiEventStreamHandler.instance.onPictureInPictureWillEnter()
-            this.ekoLayout!!.setVisibility(LinearLayout.GONE);
-        } else {
-            EkoJitsiEventStreamHandler.instance.onPictureInPictureTerminated()
-            this.ekoLayout!!.setVisibility(LinearLayout.VISIBLE);
-        }
-        if (isInPictureInPictureMode == false && onStopCalled) {
-            // Picture-in-Picture mode has been closed, we can (should !) end the call
-            getJitsiView().leave()
-        }
+@RequiresApi(Build.VERSION_CODES.O)
+override fun onPictureInPictureModeChanged(
+    isInPictureInPictureMode: Boolean,
+    newConfig: Configuration
+) {
+    super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+    if (isInPictureInPictureMode) {
+        EkoJitsiEventStreamHandler.instance.onPictureInPictureWillEnter()
+        this.ekoLayout!!.visibility = LinearLayout.GONE
+    } else {
+        EkoJitsiEventStreamHandler.instance.onPictureInPictureTerminated()
+        this.ekoLayout!!.visibility = LinearLayout.VISIBLE
     }
+    if (!isInPictureInPictureMode && onStopCalled) {
+        // Picture-in-Picture mode has been closed, we can (should !) end the call
+        getJitsiView().leave()
+    }
+}
 
     private val myReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
