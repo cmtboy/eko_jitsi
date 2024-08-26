@@ -225,7 +225,7 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
                 alert.setTitle("Whiteboard")
 
                 val wv = WebView(this)
-                wv.loadUrl(whiteboardUrl)
+              wv.loadUrl(whiteboardUrl ?: "about:blank")
                 wv.webViewClient = object : WebViewClient() {
                     override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                         view.loadUrl(url)
