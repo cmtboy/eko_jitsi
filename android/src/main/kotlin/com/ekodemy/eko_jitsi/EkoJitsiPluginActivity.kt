@@ -69,24 +69,26 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
     var ekoLayout: LinearLayout? = null;
 
 
-@RequiresApi(Build.VERSION_CODES.O)
-override fun onPictureInPictureModeChanged(
-    isInPictureInPictureMode: Boolean,
-    newConfig: Configuration
-) {
-    super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
-    if (isInPictureInPictureMode) {
-        EkoJitsiEventStreamHandler.instance.onPictureInPictureWillEnter()
-        this.ekoLayout!!.visibility = LinearLayout.GONE
-    } else {
-        EkoJitsiEventStreamHandler.instance.onPictureInPictureTerminated()
-        this.ekoLayout!!.visibility = LinearLayout.VISIBLE
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean,
+        newConfig: Configuration
+    ) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        if (isInPictureInPictureMode) {
+            // Actions when entering Picture-in-Picture mode
+            EkoJitsiEventStreamHandler.instance.onPictureInPictureWillEnter()
+            this.ekoLayout?.visibility = LinearLayout.GONE
+        } else {
+            // Actions when exiting Picture-in-Picture mode
+            EkoJitsiEventStreamHandler.instance.onPictureInPictureTerminated()
+            this.ekoLayout?.visibility = LinearLayout.VISIBLE
+        }
+        if (!isInPictureInPictureMode && onStopCalled) {
+            // End the call when Picture-in-Picture mode is closed
+            getJitsiView().leave()
+        }
     }
-    if (!isInPictureInPictureMode && onStopCalled) {
-        // Picture-in-Picture mode has been closed, we can (should !) end the call
-        getJitsiView().leave()
-    }
-}
 
     private val myReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
