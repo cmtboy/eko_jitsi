@@ -16,11 +16,9 @@ buildscript {
 
 rootProject.allprojects {
     repositories {
-        // maven {
-        //     url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
-        // }
-        maven { url 'https://www.jitpack.io' }
-
+        maven {
+            url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
+        }
         google()
         jcenter()
     }
@@ -51,8 +49,6 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.github.MatrixFrog:android-scalablevideoview:v1.0.4-jitpack'
-
 
     // Jitsi Meet from https://github.com/jitsi/jitsi-maven-repository/tree/master/releases/org/jitsi/react/jitsi-meet-sdk
     implementation ('org.jitsi.react:jitsi-meet-sdk:8.0.0') { transitive = true }
