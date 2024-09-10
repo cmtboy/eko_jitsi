@@ -5,7 +5,7 @@ buildscript {
     ext.kotlin_version = '1.8.0'
     repositories {
         google()
-        jcenter()
+        // jcenter()
     }
 
     dependencies {
@@ -20,7 +20,11 @@ rootProject.allprojects {
             url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
         }
         google()
-        jcenter()
+        jcenter() {
+            content {
+                includeModule("com.yqritc", "android-scalablevideoview")
+            }
+        }
     }
 }
 
